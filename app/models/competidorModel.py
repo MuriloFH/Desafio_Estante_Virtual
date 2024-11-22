@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from app.database.data import Base
 
-
 class Competitor(Base):
     __tablename__ = "competitors"
 
@@ -9,3 +8,4 @@ class Competitor(Base):
     identifier = Column(String, unique=True, index=True, nullable=False)
     name = Column(String, nullable=False)
     cpf = Column(String, unique=True, index=True, nullable=False)
+    

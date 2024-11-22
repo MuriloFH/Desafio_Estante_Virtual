@@ -5,7 +5,7 @@ from app.schemas.competidorSchema import CompetitorCreate
 def get_competitor(db: Session, competitor_id: int):
     return db.query(Competitor).filter(Competitor.id == competitor_id).first()
 
-def get_competitors(db: Session, skip: int = 0, limit: int = 10):
+def get_competitors(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Competitor).offset(skip).limit(limit).all()
 
 def create_competitor(db: Session, competitor: CompetitorCreate):
