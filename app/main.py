@@ -29,6 +29,8 @@ from app.crud.competicaoEventoCrud import (
     delete_competicao_evento,
     update_competicao_evento
 )
+# ------------------------ competicao evento Ranking ------------------------
+from app.crud.competicaoEventoRankingCrud import get_competicao_evento_ranking_response
 
 # Inicializa as tabelas
 Base.metadata.create_all(bind=engine)
@@ -164,3 +166,8 @@ def update_competicao_endpoint(competicao_evento_id: int, competicao: Competicao
     else:
         raise HTTPException(status_code=404, detail="Evento da competição não localizado.")
 
+
+# -------------- Competição Ranking --------------
+@app.get("/competicao/{competicao_id}/ranking", response_model=dict)
+def get_competicao_evento_ranking_endpoint(competicao_id: int, db: Session = Depends(get_db)):
+    return get_competicao_evento_ranking_response(db=db, competicao_id=competicao_id)
