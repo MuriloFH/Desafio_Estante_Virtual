@@ -19,6 +19,16 @@ from app.crud.competicaoCrud import (
     delete_competicao,
     update_competicao
 )
+# ------------------------ competicao evento ------------------------
+from app.schemas.competicaoEventoSchema import CompeticaoEvento, CompeticaoEventoResponse, CompeticaoEventoCreate
+from app.crud.competicaoEventoCrud import (
+    create_competicao_evento,
+    get_competicao_evento_response,
+    get_competicao_evento,
+    get_competicoes_eventos,
+    delete_competicao_evento,
+    update_competicao_evento
+)
 
 # Inicializa as tabelas
 Base.metadata.create_all(bind=engine)
@@ -66,6 +76,7 @@ def update_competitor_endpoint(
         raise HTTPException(status_code=404, detail="Competitor not found")
     return updated_competitor
 
+# -------------- Competição --------------
 
 @app.post("/competicao/", response_model=Competicao)
 def create_competicao_endpoint(competicao: CompeticaoCreate, db: Session = Depends(get_db)):
@@ -100,3 +111,37 @@ def update_competicao_endpoint(
     )
     
     return updated_competicao if updated_competicao else HTTPException(status_code=404, detail="Competição não localizada.")
+
+
+# -------------- Competição Evento --------------
+
+@app.post("/competicao-evento/", response_model=CompeticaoEvento)
+def create_competicao_evento_endpoint(competicao: CompeticaoEventoCreate, db: Session = Depends(get_db)):
+    return create_competicao_evento(db=db, competicao=competicao)
+
+
+@app.get("/competicao-evento/", response_model=list[CompeticaoEventoResponse])
+def read_competicao_evento(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return get_competicoes_eventos(db=db, skip=skip, limit=limit)
+
+
+@app.get("/competicao-evento/{competicao_evento_id}", response_model=CompeticaoEventoResponse)
+def read_competicao_evento(competicao_evento_id:int, db: Session = Depends(get_db)):
+    competicao_evento = get_competicao_evento_response(db=db, competicao_id=competicao_evento_id)
+    
+    return competicao_evento if competicao_evento else HTTPException(status_code=404, detail="Evento da competição não localizado.")
+
+
+@app.delete("/competicao-evento/{competicao_evento_id}")
+def delete_competicao_evento_endpoint(competicao_evento_id: int, db: Session = Depends(get_db)):
+    deleted_competicao_evento = delete_competicao_evento(db=db, competicao_id=competicao_evento_id)
+    
+    return deleted_competicao_evento if deleted_competicao_evento else HTTPException(status_code=404, detail="Evento da competição não localizado.")
+
+
+@app.put("/competicao-evento/{competicao_evento_id}", response_model=CompeticaoEvento)
+def update_competicao_endpoint(competicao_evento_id: int, competicao: CompeticaoEventoCreate, db: Session = Depends(get_db)):
+    updated_competicao_evento= update_competicao_evento(db=db, competicao_id=competicao_evento_id, update_data=competicao)
+    
+    return updated_competicao_evento if updated_competicao_evento else HTTPException(status_code=404, detail="Evento da competição não localizado.")
+

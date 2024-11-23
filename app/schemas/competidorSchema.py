@@ -5,6 +5,10 @@ class CompetitorBase(BaseModel):
     name: str
     cpf: str
 
+class CompetitorResponse(BaseModel):
+    id: int
+    competitor_name: str
+    
 class CompetitorCreate(CompetitorBase):
     pass
 

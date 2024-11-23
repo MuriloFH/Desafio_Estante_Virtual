@@ -8,3 +8,4 @@ class Competicao(Base):
     descricao = Column(String, nullable=False)
     modalidade = Column(String, nullable=False)
     ano_competicao = Column(Integer, nullable=False)
+    status = Column(String, nullable=False)
