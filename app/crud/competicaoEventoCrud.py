@@ -93,16 +93,35 @@ def get_competicoes_eventos(db: Session, skip: int = 0, limit: int = 100):
 
 def create_competicao_evento(db: Session, competicao: CompeticaoEventoCreate):
     
-    status_competicao = db.query(Competicao.status).filter(Competicao.id == competicao.competicao_id).first()
-
     # Verifica se o status da competição é 'FINALIZADO' e levanta uma exceção caso sim
+    status_competicao = db.query(Competicao.status).filter(Competicao.id == competicao.competicao_id).first()
     if status_competicao and status_competicao[0] == 'FINALIZADO':
         raise HTTPException(status_code=404, detail="Competição já finalizada")
     
+    # Verificando se o candidato da competição de "Dardo" possui 3 cadastros, caso sim, retorno 404 informando que não pode ter mais cadastros para aquele candidato
+    modalidade = db.query(Competicao.modalidade).filter(Competicao.id == competicao.competicao_id).first()
+    
+    if modalidade and modalidade[0].lower() == "dardo":
+        cadastro_competitor = db.query(CompeticaoEvento).filter(CompeticaoEvento.competitor_id == competicao.competitor_id).first()
+        
+        if cadastro_competitor:
+            # Contar cadastros diretamente no banco
+            count_cadastro_competitor = (
+                db.query(CompeticaoEvento)
+                .filter(
+                    CompeticaoEvento.competitor_id == competicao.competitor_id,
+                    CompeticaoEvento.competicao_id == competicao.competicao_id
+                )
+                .count()
+            )
+            if count_cadastro_competitor > 3:
+                raise HTTPException(status_code=404, detail=f"Competidor já cadastrado mais de 3 vezes na modalidade Dardo")
+            
+        
     newCompeticao = CompeticaoEvento(competicao_id=competicao.competicao_id,
-                                     competitor_id=competicao.competitor_id,
-                                     value=competicao.value,
-                                     unidade=competicao.unidade)
+                                    competitor_id=competicao.competitor_id,
+                                    value=competicao.value,
+                                    unidade=competicao.unidade)
     
     db.add(newCompeticao)
     db.commit()
