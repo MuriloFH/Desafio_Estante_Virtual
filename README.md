@@ -6,7 +6,7 @@
 Este é um projeto desenvolvido com o intuito de realizar um teste técnico para a empresa Estante virtual, utilizando Python e FastApi</b>.
 <br>
 <br>
-O teste consiste em criarmos uma api que permita a criação de competições de natação e dardos e ao final mostrar o ranking de cada modalidade.
+O teste consiste em desenvolver uma API que permita a criação de competições de natação e dardos, além de exibir o ranking final de cada modalidade.
 <div>
   
 <h2> Como configurar o ambiente para execução do projeto </h2>
